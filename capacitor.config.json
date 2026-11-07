@@ -17,10 +17,6 @@
       "launchAutoHide": true,
       "backgroundColor": "#ffffff",
       "showSpinner": false
-    },
-    "StatusBar": {
-      "style": "DEFAULT",
-      "overlaysWebView": false
     }
   }
 }

@@ -3,7 +3,7 @@ name: Build Android APK
 on:
   push:
     branches: [ main ]
-    paths-ignore: [ 'tools/**', '.github/workflows/site-snapshot.yml' ]
+    paths-ignore: [ 'tools/**', '.github/workflows/site-snapshot.yml', 'README.md' ]
   workflow_dispatch:
 
 permissions:
@@ -31,6 +31,9 @@ jobs:
         run: |
           npx cap add android
           npx cap sync android
+
+      - name: Add native app features (tab bar, pull-to-refresh, loading bar)
+        run: bash native/apply.sh
 
       - name: Fetch logo from chaloje.com (if no icon provided)
         continue-on-error: true
@@ -71,7 +74,8 @@ jobs:
           mkdir -p ~/.android
           cp ../debug.keystore ~/.android/debug.keystore
           chmod +x gradlew
-          ./gradlew assembleDebug
+          set -o pipefail
+          ./gradlew assembleDebug --console=plain 2>&1 | tee ../build.log
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
@@ -92,3 +96,17 @@ jobs:
           files: |
             Chaloje.apk
             resources/icon.png
+
+      - name: Save build log if the build failed
+        if: failure()
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          mkdir -p /tmp/logs && cp build.log /tmp/logs/ 2>/dev/null || echo "no gradle log" > /tmp/logs/build.log
+          git stash -u -q || true
+          git checkout --orphan build-logs
+          git rm -rf --cached . -q || true
+          cp /tmp/logs/build.log build.log
+          git add build.log
+          git commit -q -m "Build log for ${GITHUB_SHA}"
+          git push -f origin build-logs
