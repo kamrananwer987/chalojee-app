@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -47,3 +50,15 @@ jobs:
         with:
           name: chaloje-app
           path: android/app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Rename APK
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk Chaloje.apk
+
+      - name: Publish as release (direct download link)
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Chaloje App (latest)
+          body: Tap Chaloje.apk below to download, then open it to install.
+          make_latest: true
+          files: Chaloje.apk
