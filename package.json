@@ -6,7 +6,7 @@
   "scripts": {
     "setup:android": "npx cap add android && npx cap sync android",
     "setup:ios": "npx cap add ios && npx cap sync ios",
-    "icons": "npx capacitor-assets generate --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff'",
+    "icons": "npx capacitor-assets generate --iconBackgroundColor '#d7994b' --splashBackgroundColor '#ffffff'",
     "sync": "npx cap sync",
     "open:android": "npx cap open android",
     "open:ios": "npx cap open ios"

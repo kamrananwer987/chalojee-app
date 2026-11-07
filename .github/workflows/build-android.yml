@@ -58,7 +58,7 @@ jobs:
       - name: Generate icon and splash (if provided)
         run: |
           if [ -f resources/icon.png ]; then
-            npx capacitor-assets generate --android --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff'
+            npx capacitor-assets generate --android --iconBackgroundColor '#d7994b' --splashBackgroundColor '#ffffff'
           else
             echo "No resources/icon.png found - using default icon"
           fi
