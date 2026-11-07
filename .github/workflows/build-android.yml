@@ -32,18 +32,27 @@ jobs:
           npx cap sync android
 
       - name: Fetch logo from chaloje.com (if no icon provided)
+        continue-on-error: true
         run: |
           mkdir -p resources
           if [ ! -f resources/icon.png ]; then
-            curl -fsSL -o /tmp/logo.png https://chaloje.com/assets/admin/images/adaptive-icon.png || true
-            if [ -s /tmp/logo.png ]; then
-              file /tmp/logo.png
-              identify /tmp/logo.png || true
-              # Square 1024x1024 icon and 2732x2732 splash on white background
-              convert /tmp/logo.png -background white -alpha remove -alpha off -resize 1024x1024 -gravity center -extent 1024x1024 resources/icon.png
-              convert /tmp/logo.png -background white -alpha remove -alpha off -resize 1000x1000 -gravity center -extent 2732x2732 resources/splash.png
-              cp resources/splash.png resources/splash-dark.png
-            fi
+            curl -fsSL -A "Mozilla/5.0" -o /tmp/logo.png https://chaloje.com/assets/admin/images/adaptive-icon.png
+            file /tmp/logo.png
+            pip install --quiet pillow
+            python3 - <<'PY'
+          from PIL import Image
+          src = Image.open('/tmp/logo.png').convert('RGBA')
+          print('logo size:', src.size)
+          def place(canvas, box):
+              img = src.copy(); img.thumbnail((box, box), Image.LANCZOS)
+              bg = Image.new('RGB', (canvas, canvas), 'white')
+              bg.paste(img, ((canvas - img.width)//2, (canvas - img.height)//2), img)
+              return bg
+          place(1024, 1024).save('resources/icon.png')
+          place(2732, 1000).save('resources/splash.png')
+          place(2732, 1000).save('resources/splash-dark.png')
+          PY
+            ls -l resources
           fi
 
       - name: Generate icon and splash (if provided)
