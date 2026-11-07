@@ -31,6 +31,21 @@ jobs:
           npx cap add android
           npx cap sync android
 
+      - name: Fetch logo from chaloje.com (if no icon provided)
+        run: |
+          mkdir -p resources
+          if [ ! -f resources/icon.png ]; then
+            curl -fsSL -o /tmp/logo.png https://chaloje.com/assets/admin/images/adaptive-icon.png || true
+            if [ -s /tmp/logo.png ]; then
+              file /tmp/logo.png
+              identify /tmp/logo.png || true
+              # Square 1024x1024 icon and 2732x2732 splash on white background
+              convert /tmp/logo.png -background white -alpha remove -alpha off -resize 1024x1024 -gravity center -extent 1024x1024 resources/icon.png
+              convert /tmp/logo.png -background white -alpha remove -alpha off -resize 1000x1000 -gravity center -extent 2732x2732 resources/splash.png
+              cp resources/splash.png resources/splash-dark.png
+            fi
+          fi
+
       - name: Generate icon and splash (if provided)
         run: |
           if [ -f resources/icon.png ]; then
@@ -61,4 +76,6 @@ jobs:
           name: Chaloje App (latest)
           body: Tap Chaloje.apk below to download, then open it to install.
           make_latest: true
-          files: Chaloje.apk
+          files: |
+            Chaloje.apk
+            resources/icon.png
