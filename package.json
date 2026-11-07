@@ -1,0 +1,26 @@
+{
+  "name": "chaloje-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Chaloje Flights mobile app (Android & iOS wrapper for chaloje.com)",
+  "scripts": {
+    "setup:android": "npx cap add android && npx cap sync android",
+    "setup:ios": "npx cap add ios && npx cap sync ios",
+    "icons": "npx capacitor-assets generate --iconBackgroundColor '#ffffff' --splashBackgroundColor '#ffffff'",
+    "sync": "npx cap sync",
+    "open:android": "npx cap open android",
+    "open:ios": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0",
+    "@capacitor/splash-screen": "^7.0.0",
+    "@capacitor/status-bar": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.0",
+    "@capacitor/cli": "^7.0.0"
+  }
+}

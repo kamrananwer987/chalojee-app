@@ -1,0 +1,26 @@
+{
+  "appId": "com.chaloje.app",
+  "appName": "Chaloje",
+  "webDir": "www",
+  "server": {
+    "url": "https://chaloje.com",
+    "cleartext": false,
+    "errorPath": "offline.html",
+    "allowNavigation": [
+      "chaloje.com",
+      "*.chaloje.com"
+    ]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "launchAutoHide": true,
+      "backgroundColor": "#ffffff",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "DEFAULT",
+      "overlaysWebView": false
+    }
+  }
+}
