@@ -3,6 +3,7 @@ name: Build Android APK
 on:
   push:
     branches: [ main ]
+    paths-ignore: [ 'tools/**', '.github/workflows/site-snapshot.yml' ]
   workflow_dispatch:
 
 permissions:

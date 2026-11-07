@@ -1,0 +1,38 @@
+name: Site snapshot
+
+on:
+  workflow_dispatch:
+  push:
+    paths: [ '.github/workflows/site-snapshot.yml', 'tools/snapshot.mjs' ]
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install browser
+        run: |
+          mkdir -p /tmp/snap && cd /tmp/snap
+          npm init -y >/dev/null
+          npm install playwright@1
+          npx playwright install --with-deps chromium
+      - name: Render pages
+        run: |
+          mkdir -p snapshot
+          cp tools/snapshot.mjs /tmp/snap/
+          cd /tmp/snap && node snapshot.mjs "$GITHUB_WORKSPACE/snapshot"
+      - name: Save to snapshot branch
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git checkout --orphan snapshot
+          git rm -rf --cached . >/dev/null
+          git add snapshot
+          git commit -m "Site snapshot"
+          git push -f origin snapshot
