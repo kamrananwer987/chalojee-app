@@ -187,7 +187,7 @@ public class MainActivity extends BridgeActivity {
     }
 
     private void hookWebView() {
-        bridge.setWebChromeClient(new BridgeWebChromeClient(bridge) {
+        webView.setWebChromeClient(new BridgeWebChromeClient(bridge) {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
